@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee
+  labels:
+    app: employee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee
+  template:
+    metadata:
+      labels:
+        app: employee
+    spec:
+      containers:
+        - name: employee
+          image: kuangjianqiang/employee:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: database-name
+            - name: MYSQL_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: database-password
+            - name: MYSQL_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: database-user
+            - name: MYSQL_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql_host
+            - name: MYSQL_DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: mysql_port                
+                  
+    
